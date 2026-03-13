@@ -1,0 +1,191 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  nickname  String
+  gender    String   // "male" | "female"
+  birthYear Int
+  region    String
+  bio       String   @default("")
+  avatar    String   @default("")
+  interests String   @default("") // JSON array string
+  coins     Int      @default(0)
+  isPremium Boolean  @default(false)
+  isOnline  Boolean  @default(false)
+  isBanned  Boolean  @default(false)
+  isAdmin   Boolean  @default(false)
+  lastSeen  DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sentMessages     Message[]  @relation("SentMessages")
+  chatRoomMembers  ChatRoomMember[]
+  likesGiven       Like[]     @relation("LikesGiven")
+  likesReceived    Like[]     @relation("LikesReceived")
+  payments         Payment[]
+  subscription     Subscription?
+  matchingProfile  MatchingProfile?
+  reportsGiven     Report[]   @relation("ReportsGiven")
+  reportsReceived  Report[]   @relation("ReportsReceived")
+  blocksGiven      Block[]    @relation("BlocksGiven")
+  blocksReceived   Block[]    @relation("BlocksReceived")
+  pushSubscriptions PushSubscription[]
+
+  @@map("users")
+}
+
+model ChatRoom {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members  ChatRoomMember[]
+  messages Message[]
+
+  @@map("chat_rooms")
+}
+
+model ChatRoomMember {
+  id         String   @id @default(cuid())
+  userId     String
+  chatRoomId String
+  lastReadAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chatRoom ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, chatRoomId])
+  @@map("chat_room_members")
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  content    String
+  senderId   String
+  chatRoomId String
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  sender   User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  chatRoom ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+model Like {
+  id         String   @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  createdAt  DateTime @default(now())
+
+  fromUser User @relation("LikesGiven", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser   User @relation("LikesReceived", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@unique([fromUserId, toUserId])
+  @@map("likes")
+}
+
+// 코인 결제 내역
+model Payment {
+  id            String   @id @default(cuid())
+  userId        String
+  orderId       String   @unique  // 토스페이먼츠 주문 ID
+  paymentKey    String?           // 토스페이먼츠 결제 키
+  orderName     String            // 예: "코인 100개"
+  amount        Int               // 결제 금액 (원)
+  coins         Int               // 지급 코인 수
+  status        String   @default("PENDING") // PENDING | DONE | CANCELED | FAILED
+  method        String?           // 카드, 가상계좌 등
+  createdAt     DateTime @default(now())
+  approvedAt    DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+// 프리미엄 구독
+model Subscription {
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  plan        String    // "monthly" | "quarterly" | "yearly"
+  orderId     String    @unique
+  paymentKey  String?
+  amount      Int
+  status      String    @default("ACTIVE") // ACTIVE | CANCELED | EXPIRED
+  startedAt   DateTime  @default(now())
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+// 신고
+model Report {
+  id         String   @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  reason     String
+  detail     String   @default("")
+  status     String   @default("PENDING") // PENDING | REVIEWED | DISMISSED
+  createdAt  DateTime @default(now())
+
+  fromUser User @relation("ReportsGiven", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser   User @relation("ReportsReceived", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@map("reports")
+}
+
+// 차단
+model Block {
+  id          String   @id @default(cuid())
+  blockerId   String
+  blockedId   String
+  createdAt   DateTime @default(now())
+
+  blocker User @relation("BlocksGiven", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation("BlocksReceived", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+  @@map("blocks")
+}
+
+// 푸시 알림 구독
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("push_subscriptions")
+}
+
+// AI 매칭 프로필
+model MatchingProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  personality  String   @default("") // JSON: 성격 특성
+  ideal        String   @default("") // JSON: 이상형 조건
+  aiScore      String   @default("") // JSON: AI 분석 결과
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("matching_profiles")
+}

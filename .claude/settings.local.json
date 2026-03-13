@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.7080nara.com)",
+      "WebSearch",
+      "WebFetch(domain:play.google.com)"
+    ]
+  }
+}

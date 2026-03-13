@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Environment
+.env
+.env.local
+
+# Database
+*.db
+*.db-journal
+prisma/dev.db
+
+# Uploads (로컬 파일, 배포 시 S3 등으로 대체)
+public/uploads/
+
+# Build
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
