@@ -46,7 +46,7 @@ export default function Navbar() {
       <Link href="/" className="flex items-center gap-2 mr-8">
         <span className="text-2xl">🌸</span>
         <span className="font-bold text-lg bg-gradient-primary bg-clip-text text-transparent">
-          중년나라
+          설레임
         </span>
       </Link>
 

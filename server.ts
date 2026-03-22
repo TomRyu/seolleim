@@ -192,6 +192,6 @@ app.prepare().then(() => {
 
   const PORT = process.env.PORT || 3000;
   httpServer.listen(PORT, () => {
-    console.log(`\n🌸 중년나라 서버 실행 중: http://localhost:${PORT}\n`);
+    console.log(`\n🌸 설레임 서버 실행 중: http://localhost:${PORT}\n`);
   });
 });

@@ -6,8 +6,8 @@ import BottomNav from '@/components/BottomNav';
 import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
-  title: '중년나라 - 다시 설레는 그 시절처럼',
-  description: '40~60대 중년을 위한 따뜻한 만남과 채팅 커뮤니티',
+  title: '설레임 - 다시, 설레임이 시작됩니다',
+  description: '40~60대 중년을 위한 따뜻한 만남과 채팅 커뮤니티 설레임',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
