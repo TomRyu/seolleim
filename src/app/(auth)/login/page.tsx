@@ -44,8 +44,8 @@ export default function LoginPage() {
       {/* 로고 */}
       <div className="text-center mb-8">
         <div className="text-5xl mb-3">🌸</div>
-        <h1 className="text-2xl font-bold gradient-text">중년나라</h1>
-        <p className="text-text-muted text-sm mt-1">다시 설레는 그 시절처럼</p>
+        <h1 className="text-2xl font-bold gradient-text">설레임</h1>
+        <p className="text-text-muted text-sm mt-1">다시, 설레임이 시작됩니다</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
