@@ -48,13 +48,6 @@ export default function ShopPage() {
         failUrl: `${window.location.origin}/payment/fail`,
         amount: { currency: 'KRW', value: amount },
       });
-        amount,
-        orderId,
-        orderName,
-        customerName: user.nickname,
-        successUrl: `${window.location.origin}/payment/success?type=coin`,
-        failUrl: `${window.location.origin}/payment/fail`,
-      });
     } catch (err: any) {
       if (err?.code !== 'PAY_PROCESS_CANCELED') {
         toast.error('결제 중 오류가 발생했습니다.');
