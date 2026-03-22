@@ -3,7 +3,10 @@
     "allow": [
       "WebFetch(domain:www.7080nara.com)",
       "WebSearch",
-      "WebFetch(domain:play.google.com)"
+      "WebFetch(domain:play.google.com)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(echo \"EXIT_CODE: $?\")"
     ]
   }
 }

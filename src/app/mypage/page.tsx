@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/providers/AuthProvider';
 import { useRouter } from 'next/navigation';
-import { ChevronRight, Edit3, LogOut, Camera, Bell } from 'lucide-react';
+import { ChevronRight, Edit3, LogOut, Camera, Bell, Heart } from 'lucide-react';
 import { usePushNotification } from '@/lib/use-push';
 import { getAge, formatTime, REGIONS, INTERESTS, cn } from '@/lib/utils';
 import toast from 'react-hot-toast';

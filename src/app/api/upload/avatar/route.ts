@@ -23,16 +23,17 @@ export async function POST(req: NextRequest) {
   }
 
   const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
+  const buffer = Buffer.from(new Uint8Array(bytes));
 
   // sharp로 리사이징 (설치된 경우)
-  let finalBuffer = buffer;
+  let finalBuffer: Buffer = buffer;
   try {
     const sharp = (await import('sharp')).default;
-    finalBuffer = await sharp(buffer)
+    const resized = await sharp(buffer)
       .resize(400, 400, { fit: 'cover', position: 'center' })
       .jpeg({ quality: 85 })
       .toBuffer();
+    finalBuffer = resized;
   } catch {
     // sharp 없으면 원본 사용
   }

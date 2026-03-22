@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/components/providers/AuthProvider';
 import { getSocket, connectSocket } from '@/lib/socket-client';
@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 import VideoCall from '@/components/VideoCall';
 import IncomingCallModal from '@/components/IncomingCallModal';
 
-export default function ChatPage() {
+function ChatContent() {
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -372,5 +372,13 @@ export default function ChatPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ChatPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-bg-base" />}>
+      <ChatContent />
+    </Suspense>
   );
 }
